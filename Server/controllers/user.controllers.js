@@ -1,8 +1,8 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import getDataUri from "../utils/datauri.js";
-import cloudinary from "../utils/cloudinary.js";
+//import getDataUri from "../utils/datauri.js";
+//import cloudinary from "../utils/cloudinary.js";
 
 export const register = async (req, res) => {
     try {
@@ -15,12 +15,12 @@ export const register = async (req, res) => {
                 success: false,
             });
         }
-        const file = req.file
-        let cloudResponse = ""
-        if (file) {
-            const fileUri = getDataUri(file)
-            cloudResponse = await cloudinary.uploader.upload(fileUri.content)
-        }
+        //const file = req.file
+        //let cloudResponse = ""
+        //if (file) {
+          //  const fileUri = getDataUri(file)
+           // cloudResponse = await cloudinary.uploader.upload(fileUri.content)
+        //}
 
         const existedUser = await User.findOne({ email: email });
         if (existedUser) {
@@ -32,10 +32,10 @@ export const register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        let url = null;
-        if (file && cloudResponse) {
-            url = cloudResponse.secure_url;
-        }
+        //let url = null;
+        //if (file && cloudResponse) {
+          //  url = cloudResponse.secure_url;
+        //}
 
         await User.create({
             fullname, email, phoneNumber,
