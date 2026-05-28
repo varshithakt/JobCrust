@@ -42,7 +42,7 @@ export const register = async (req, res) => {
             password: hashedPassword,
             role,
             profile: {
-                profilePhoto: url,
+                profilePhoto: "",
             }
         })
 
