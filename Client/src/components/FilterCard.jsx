@@ -12,7 +12,7 @@ import useGetAllJobs from '@/hooks/useGetAllJobs'
 const filterData = [
     {
         filterType: "Location",
-        array: ["Delhi NCR", "Bengluru", "Mumbai", "Hyderabad", "Ranchi", "Patna"]
+        array: ["Delhi NCR", "bengaluru", "Mumbai","Pune", "Hyderabad", "Ranchi", "Patna"]
     },
     {
         filterType: "Industry",
