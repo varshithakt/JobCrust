@@ -42,41 +42,100 @@ export const postJob = async (req, res) => {
 
 
 // role === "student"
+// role === "student"
 
 export const getAllJobs = async (req, res) => {
     try {
         const keyword = req.query.keyword || "";
-        const query = {
-            $or: [
-                { title: { $regex: keyword, $options: "i" } },
-                { description: { $regex: keyword, $options: "i" } },
-            ]
-        };
 
-        const jobs = await Job.find(query).populate({
-            path: "company"
-        }).sort({ createdAt: -1 });
+        let query = {};
 
-        // we can use more than two populate at a time
-
-        if (!jobs) {
-            return res.status(404).json({
-                message: "No jobs found",
-                success: false,
-            })
+        // Salary Filters
+        if (keyword === "6-10 LPA") {
+            query = {
+                salary: {
+                    $gte: 6,
+                    $lte: 10
+                }
+            };
+        }
+        else if (keyword === "10-40 LPA") {
+            query = {
+                salary: {
+                    $gt: 10,
+                    $lte: 40
+                }
+            };
+        }
+        else if (keyword === "40-100 LPA") {
+            query = {
+                salary: {
+                    $gt: 40,
+                    $lte: 100
+                }
+            };
+        }
+        else if (keyword === "100+") {
+            query = {
+                salary: {
+                    $gt: 100
+                }
+            };
         }
 
-        return res.status(200).json({
-            message: "",
-            jobs,
-            success: true,
-        })
+        // Location + Industry + Job Title Search
+        else {
+            query = {
+                $or: [
+                    {
+                        title: {
+                            $regex: keyword,
+                            $options: "i"
+                        }
+                    },
+                    {
+                        description: {
+                            $regex: keyword,
+                            $options: "i"
+                        }
+                    },
+                    {
+                        location: {
+                            $regex: keyword,
+                            $options: "i"
+                        }
+                    },
+                    {
+                        jobType: {
+                            $regex: keyword,
+                            $options: "i"
+                        }
+                    }
+                ]
+            };
+        }
 
+        const jobs = await Job.find(query)
+            .populate({
+                path: "company"
+            })
+            .sort({ createdAt: -1 });
+
+        return res.status(200).json({
+            success: true,
+            jobs,
+            message: "Jobs fetched successfully"
+        });
 
     } catch (error) {
         console.log(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
     }
-}
+};
 
 
 // role === "student"
@@ -137,5 +196,5 @@ export const getRecruiterJobs = async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-}
+}//
 
