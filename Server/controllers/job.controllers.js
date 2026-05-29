@@ -43,14 +43,13 @@ export const postJob = async (req, res) => {
 
 // role === "student"
 // role === "student"
-
 export const getAllJobs = async (req, res) => {
     try {
         const keyword = req.query.keyword || "";
 
         let query = {};
 
-        // Salary Filters
+        // Salary filters
         if (keyword === "6-10 LPA") {
             query = {
                 salary: {
@@ -62,7 +61,7 @@ export const getAllJobs = async (req, res) => {
         else if (keyword === "10-40 LPA") {
             query = {
                 salary: {
-                    $gt: 10,
+                    $gte: 10,
                     $lte: 40
                 }
             };
@@ -70,7 +69,7 @@ export const getAllJobs = async (req, res) => {
         else if (keyword === "40-100 LPA") {
             query = {
                 salary: {
-                    $gt: 40,
+                    $gte: 40,
                     $lte: 100
                 }
             };
@@ -78,39 +77,16 @@ export const getAllJobs = async (req, res) => {
         else if (keyword === "100+") {
             query = {
                 salary: {
-                    $gt: 100
+                    $gte: 100
                 }
             };
         }
-
-        // Location + Industry + Job Title Search
         else {
             query = {
                 $or: [
-                    {
-                        title: {
-                            $regex: keyword,
-                            $options: "i"
-                        }
-                    },
-                    {
-                        description: {
-                            $regex: keyword,
-                            $options: "i"
-                        }
-                    },
-                    {
-                        location: {
-                            $regex: keyword,
-                            $options: "i"
-                        }
-                    },
-                    {
-                        jobType: {
-                            $regex: keyword,
-                            $options: "i"
-                        }
-                    }
+                    { title: { $regex: keyword, $options: "i" } },
+                    { description: { $regex: keyword, $options: "i" } },
+                    { location: { $regex: keyword, $options: "i" } }
                 ]
             };
         }
@@ -123,8 +99,7 @@ export const getAllJobs = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            jobs,
-            message: "Jobs fetched successfully"
+            jobs
         });
 
     } catch (error) {
@@ -132,11 +107,11 @@ export const getAllJobs = async (req, res) => {
 
         return res.status(500).json({
             success: false,
-            message: "Internal Server Error"
+            message: "Server Error"
         });
     }
 };
-
+                        
 
 // role === "student"
 
